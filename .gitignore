@@ -7,3 +7,4 @@ reports/
 .cursor/
 prompts/
 *.DS_STORE
+.idea/
