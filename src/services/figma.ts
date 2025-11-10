@@ -1,6 +1,11 @@
 // services/figma.mts
 import fetch from 'node-fetch';
-import type {FigmaNode, NodeResponse} from '../types/figma.js';
+import type {
+    FigmaNode,
+    NodeResponse,
+    FigmaVariablesMeta,
+    FigmaVariablesResponse
+} from '../types/figma.js';
 import {
     FigmaError,
     FigmaAuthError,
@@ -219,6 +224,26 @@ export class FigmaService {
                 throw error;
             }
             throw new FigmaError(`Failed to fetch image fills: ${error}`, 'FETCH_ERROR');
+        }
+    }
+
+    /**
+     * Get local design tokens (variables) defined in the file
+     */
+    async getLocalVariables(fileId: string): Promise<FigmaVariablesMeta> {
+        try {
+            const response = await this.makeRequest<FigmaVariablesResponse>(`/files/${fileId}/variables/local`);
+
+            if (!response?.meta) {
+                throw new FigmaParseError('Invalid variables response from Figma API', response);
+            }
+
+            return response.meta;
+        } catch (error) {
+            if (error instanceof FigmaError) {
+                throw error;
+            }
+            throw new FigmaError(`Failed to fetch design tokens: ${error}`, 'FETCH_ERROR');
         }
     }
 }

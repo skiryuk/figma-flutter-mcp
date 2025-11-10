@@ -227,3 +227,63 @@ export interface PageResponse {
     components?: {[key: string]: FigmaComponent};
     styles?: {[key: string]: FigmaStyle};
 }
+
+// Design Tokens (Variables)
+export type FigmaVariableResolvedType = 'COLOR' | 'FLOAT' | 'STRING' | 'BOOLEAN';
+
+export interface FigmaVariableAlias {
+    type: 'VARIABLE_ALIAS';
+    id: string;
+}
+
+export type FigmaVariableValue =
+    | number
+    | string
+    | boolean
+    | FigmaColor
+    | FigmaVariableAlias
+    | null;
+
+export interface FigmaVariableMode {
+    modeId: string;
+    name: string;
+    description?: string;
+}
+
+export interface FigmaVariableCollection {
+    id: string;
+    name: string;
+    defaultModeId: string;
+    remote: boolean;
+    description?: string;
+    hiddenFromPublishing?: boolean;
+    modes: FigmaVariableMode[];
+    codeSyntax?: Record<string, any>;
+    updated_at?: string;
+    created_at?: string;
+}
+
+export interface FigmaVariable {
+    id: string;
+    name: string;
+    key: string;
+    resolvedType: FigmaVariableResolvedType;
+    description?: string;
+    remote: boolean;
+    variableCollectionId: string;
+    hiddenFromPublishing?: boolean;
+    scopes?: string[];
+    valuesByMode: Record<string, FigmaVariableValue>;
+}
+
+export interface FigmaVariablesMeta {
+    scopes: string[];
+    variableCollections: FigmaVariableCollection[];
+    variables: FigmaVariable[];
+}
+
+export interface FigmaVariablesResponse {
+    status?: number;
+    error?: string;
+    meta: FigmaVariablesMeta;
+}

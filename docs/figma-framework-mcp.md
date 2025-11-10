@@ -2,7 +2,7 @@
 Since [Figma Context MCP](https://github.com/gLips/Figma-Context-MCP/) is framework‑agnostic, it does not output code or artifacts tailored to React, Angular, Vue, Flutter, etc. This repository adds a concrete implementation for Flutter (see `docs/figma-flutter-mcp.md`) and documents how to adapt the same architecture to any other framework.
 
 ### What you get out of the box
-- **Extractors (framework‑agnostic):** Parse Figma nodes into consistent, rich, typed models for components, screens, colors, and typography.
+- **Extractors (framework‑agnostic):** Parse Figma nodes into consistent, rich, typed models for components, screens, colors, typography, and design tokens.
 - **Framework tools (Flutter today):** Wrap extractors, add framework‑specific heuristics, asset export, guidance, and code generation.
 - **CLI/MCP entry points:** Commands and tools to analyze Figma nodes and generate artifacts into a project.
 
@@ -23,6 +23,9 @@ Extractors live under `src/extractors/` and work the same regardless of the targ
 - **Typography:** `src/extractors/typography/`
   - Entry point: `extractThemeTypography`
   - Outputs normalized text styles with font family, size, weight, and line height.
+- **Design tokens:** `src/extractors/design-tokens/`
+  - Entry points: `extractDesignTokens`, `DesignTokenExtractor`
+  - Outputs variable collections with mode-aware values, alias metadata, and formatted colors/numbers/strings/booleans.
 
 These modules use Figma API types (e.g., `FigmaNode`, `FigmaColor`, `FigmaEffect`) and heuristics (e.g., `node.type === 'TEXT' | 'FRAME' | 'COMPONENT'`) to create consistent data across frameworks. The output types are intentionally neutral so they can be mapped to any target tech stack.
 
@@ -37,7 +40,7 @@ Tools typically do the following:
 - **Map design semantics** to framework widgets/components (containers, text, icons, layout primitives).
 - **Generate code or guidance** (e.g., Flutter widget tree suggestions in `src/tools/flutter/components/helpers.mts`).
 - **Export assets** and update project manifests (images, SVGs, `pubspec.yaml` for Flutter).
-- **Integrate theming** by referencing color schemes and text themes rather than hardcoding styles when possible.
+- **Integrate theming** by referencing color schemes, typography, and design tokens (Variables) rather than hardcoding styles when possible.
 
 In other words, extractors give you high‑quality design insights; tools translate those insights into framework‑specific outputs.
 

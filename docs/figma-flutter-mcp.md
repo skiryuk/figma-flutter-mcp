@@ -234,6 +234,24 @@ The system provides detailed logging to track deduplication performance:
 - **⚡ Auto-optimization** - Automatic optimization triggers and results
 - **📊 Analysis Results** - Component analysis statistics and performance metrics
 
+## Design Token Extraction
+
+Figma's Variables API finally makes raw design tokens accessible without publishing a library, but it requires nuanced handling:
+
+- **Collection aware** – Tokens are grouped by collection, modes, and default scopes for easy inspection.
+- **Alias resolution** – The extractor follows variable aliases and resolves them when possible, surfacing both the alias source and the resolved value.
+- **Mode snapshots** – Every token lists values per mode, so dark/light or platform variants stay intact.
+- **Raw + formatted output** – Color tokens surface both hex and RGBA, numeric tokens keep precision, and strings/booleans stay native.
+- **Scoping hints** – Returned scopes highlight whether your access token has the right permissions (`VARIABLES_READ` is required).
+
+Use the new `extract_design_tokens` MCP tool to fetch the data:
+
+```
+extract_design_tokens(fileId: "YOUR_FILE_ID")
+```
+
+Add `resolveAliases: false` when you need untouched alias references for downstream tooling. The response includes a human-readable digest plus the complete JSON payload for programmatic use.
+
 ## Real-World Compatibility
 
 | Scenario | Pure Figma API | Figma Context MCP | My Hybrid Approach |
@@ -283,6 +301,7 @@ if (textInfo.semanticType === 'button') {
 
 ### ✅ What I DO:
 - Extract design data from Figma - Comprehensive analysis of layouts, styling, and content
+- Extract design tokens from Variables - Alias-aware summaries with per-mode values
 - Generate text-based guidance with Flutter syntax - Structured recommendations for AI consumption
 - Provide copy-paste ready snippets - Ready-to-use Flutter widget patterns with real design values
 - Structure information for AI consumption - Organized data that AI models can use to generate actual code
